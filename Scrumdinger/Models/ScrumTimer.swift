@@ -112,7 +112,8 @@ final class ScrumTimer: ObservableObject {
     
 }
 
-
+/// Extended functionality for attendee
+/// Returns a map of speakers for each attendee
 extension Array<DailyScrum.Attendee> {
     var speakers: [ScrumTimer.Speaker] {
         if isEmpty {
