@@ -13,48 +13,38 @@ struct MeetingView: View {
     
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 16)
+            RoundedRectangle(cornerRadius: 16.0)
                 .fill(scrum.theme.mainColor)
             VStack {
-                MeetingHeaderView(
-                    secondsElapsed: scrumTimer.secondsElapsed,
-                    secondsRemaining: scrumTimer.secondsRemaining,
-                    theme: scrum.theme
-                )
-                Circle()
-                    .strokeBorder(lineWidth: 24)
-                MeetingFooterView(
-                    speakers: scrum.attendees.speakers,
-                    skipAction: scrumTimer.skipSpeaker
-                )
+                MeetingHeaderView(secondsElapsed: scrumTimer.secondsElapsed, secondsRemaining: scrumTimer.secondsRemaining, theme: scrum.theme)
+                MeetingTimerView(speakers: scrumTimer.speakers, theme: scrum.theme)
+                MeetingFooterView(speakers: scrumTimer.speakers, skipAction: scrumTimer.skipSpeaker)
             }
         }
         .padding()
         .foregroundColor(scrum.theme.accentColor)
         .onAppear {
-           startScrum()
+            startScrum()
         }
-        .onDisappear{
-            endScrum()           
+        .onDisappear {
+            endScrum()
         }
         .navigationBarTitleDisplayMode(.inline)
     }
     
-    private func endScrum(){
-        scrumTimer.stopScrum()
-        let newHistory = History(attendees: scrum.attendees)
-        scrum.history.insert(newHistory, at: 0)
-    }
-    
     private func startScrum() {
-        scrumTimer.reset(
-            lengthInMinutes: scrum.lengthInMinutes, attendees: scrum.attendees
-        )
+        scrumTimer.reset(lengthInMinutes: scrum.lengthInMinutes, attendees: scrum.attendees)
         scrumTimer.speakerChangedAction = {
             player.seek(to: .zero)
             player.play()
         }
         scrumTimer.startScrum()
+    }
+    
+    private func endScrum() {
+        scrumTimer.stopScrum()
+        let newHistory = History(attendees: scrum.attendees)
+        scrum.history.insert(newHistory, at: 0)
     }
 }
 

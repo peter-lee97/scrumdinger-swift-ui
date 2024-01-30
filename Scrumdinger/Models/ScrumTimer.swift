@@ -69,8 +69,12 @@ final class ScrumTimer: ObservableObject {
         timerStopped = true
     }
     
+    /// Advance the timer to the next speaker.
     nonisolated func skipSpeaker() {
-        Task { @MainActor in changeToSpeaker(at: speakerIndex + 1)}
+        
+        Task { @MainActor in
+            changeToSpeaker(at: speakerIndex + 1)
+        }
     }
     
     private func changeToSpeaker(at index: Int) {
@@ -82,6 +86,7 @@ final class ScrumTimer: ObservableObject {
         guard index < speakers.count else { return }
         speakerIndex = index
         activeSpeaker = speakerText
+        
         secondsElapsed = index * secondsPerSpeaker
         secondsRemaining = lengthInSeconds - secondsElapsed
         startDate = Date()
