@@ -11,6 +11,11 @@ struct ScrumsView: View {
     @Binding var scrums: [DailyScrum]
     @State private var isPresentingNewScrumView = false
     
+    /// To observe value and save user data when become inactive
+    @Environment(\.scenePhase) private var scenePhase
+    
+    let saveAction: ()->Void
+    
     var body: some View {
         NavigationStack{
             List($scrums) {$scrum in
@@ -37,12 +42,16 @@ struct ScrumsView: View {
                 isPresentingNewScrumView: $isPresentingNewScrumView,
                 scrums: $scrums
             )
+        }.onChange(of: scenePhase) { phase in
+            if phase == .inactive {saveAction()}
+            
         }
     }
 }
 
 #Preview {
     ScrumsView(
-        scrums: .constant(DailyScrum.sampleData)
+        scrums: .constant(DailyScrum.sampleData),
+        saveAction: {}
     )
 }
