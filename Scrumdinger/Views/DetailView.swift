@@ -20,7 +20,7 @@ struct DetailView: View {
                         .font(.headline)
                         .foregroundColor(.accentColor)
                 }
-    
+                
                 HStack {
                     Label("Length", systemImage: "clock")
                     Spacer()
@@ -49,9 +49,11 @@ struct DetailView: View {
                           systemImage: "calendar.badge.exclamationmark")
                 }
                 ForEach(scrum.history) { history in
-                    HStack {
-                        Image(systemName: "calendar")
-                        Text(history.date, style: .date)
+                    NavigationLink(destination: HistoryView(history: history)) {
+                        HStack {
+                            Image(systemName: "calendar")
+                            Text(history.date, style: .date)
+                        }
                     }
                 }
             }
@@ -69,18 +71,18 @@ struct DetailView: View {
                 DetailEditView(scrum: $editingScrum)
                     .navigationTitle(scrum.title)
                     .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button("Cancel") {
-                            isPresentingEditView = false
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("Cancel") {
+                                isPresentingEditView = false
+                            }
+                        }
+                        ToolbarItem(placement: .confirmationAction) {
+                            Button("Done") {
+                                isPresentingEditView = false
+                                scrum = editingScrum
+                            }
                         }
                     }
-                    ToolbarItem(placement: .confirmationAction) {
-                        Button("Done") {
-                            isPresentingEditView = false
-                            scrum = editingScrum
-                        }
-                    }
-                }
             }
         }
         
